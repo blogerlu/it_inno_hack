@@ -34,6 +34,7 @@ class SimilaritySystem:
             return 1
         return 0
 
+        # real rules evaluating
         # for rule in self.rules:
         #     similarity = rule(row1, row2)
         #     if similarity > self.SIMILARITY_THRESHOLD:
