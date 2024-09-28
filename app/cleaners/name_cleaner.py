@@ -8,9 +8,7 @@ class NameCleaner(BaseCleaner):
         """Разделяет и стандартизирует full_name на first_name, middle_name, last_name"""
         # Удаление лишних символов
         full_name = re.sub(r"\d|\n|\\|/", "", full_name).strip().upper()
-        full_name.replace("ОГЛЫ", "")
-        full_name.replace("ОГЛИ", "")
-        full_name.replace("КЫЗЫ", "")
+        full_name = re.sub(r"ОГЛЫ|ОГЛИ|КЫЗЫ", "", full_name)
         parts = re.split(r"\s+", full_name)  # Разделение по пробелам
 
         # Возвращаем разделенные части ФИО

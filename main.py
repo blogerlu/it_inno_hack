@@ -35,6 +35,7 @@ def main():
     df = pd.read_csv("data/public/main1.csv", nrows=100000)
     processor = DataProcessor(df)
     processor.clean_data()
+    processor.df.to_csv("data/main1_clean.csv", index=False)
     duplicates = processor.find_duplicates()
     print(len(duplicates))
 
