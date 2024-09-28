@@ -10,10 +10,14 @@ GitHub: [github.com/blogerlu/it_inno_hack](https://github.com/blogerlu/it_inno_h
 ## Структура проекта
 
 ```
+.
 ├── app
 │   ├── custom_dataframe.py
 │   ├── __init__.py
-│   ├── main.py
+│   ├── __pycache__
+│   │   ├── custom_dataframe.cpython-312.pyc
+│   │   ├── __init__.cpython-312.pyc
+│   │   └── similarity_system.cpython-312.pyc
 │   └── similarity_system.py
 ├── data
 │   └── public
@@ -34,6 +38,7 @@ GitHub: [github.com/blogerlu/it_inno_hack](https://github.com/blogerlu/it_inno_h
 ├── Dockerfile
 ├── images
 │   └── header.png
+├── main.py
 ├── notebooks
 │   ├── clickhouse_connect.ipynb
 │   ├── data_analitics.ipynb
@@ -41,6 +46,7 @@ GitHub: [github.com/blogerlu/it_inno_hack](https://github.com/blogerlu/it_inno_h
 ├── poetry.lock
 ├── pyproject.toml
 └── README.md
+
 ```
 
 ## Setup
