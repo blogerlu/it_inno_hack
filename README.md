@@ -41,6 +41,14 @@ GitHub: [github.com/blogerlu/it_inno_hack](https://github.com/blogerlu/it_inno_h
 
 ```
 
+## Setup
+
+Используйте docker-compose:
+
+```bash
+docker-compose up
+```
+
 ## Архитектура
 
 На данном этапе мы проводим много локальных тестов в jupyter notebook'ах, однако уже сделали часть централизированной
@@ -63,11 +71,3 @@ GitHub: [github.com/blogerlu/it_inno_hack](https://github.com/blogerlu/it_inno_h
 ### Rule (`similarity_system.py`)
 
 Абстрактный класс для создания правил сравнения строк.
-
-## Setup
-
-Используйте docker-compose:
-
-```bash
-docker-compose up
-```
