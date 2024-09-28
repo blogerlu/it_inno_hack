@@ -1,4 +1,4 @@
-from typing import Dict, Any, List, Tuple
+from typing import Dict, Any, List, Tuple, Optional
 from uuid import uuid4
 
 import pandas as pd
@@ -40,10 +40,11 @@ class CustomDataFrame(pd.DataFrame):
     def generate_uid() -> str:
         return str(uuid4())
 
-    def add_row(self, row: pd.Series) -> str:
+    def add_row(self, row: pd.Series, uid: Optional[str] = None) -> str:
         """Register new row and add maximum data from the row to the dataframe."""
-        intersection_columns = set(row.index) & set(self.columns)
-        new_uid = self.generate_uid()
+        intersection_columns = set(row.index) & set(self.COLUMNS)
+
+        new_uid = uid if uid else self.generate_uid()
 
         for column in intersection_columns:
             self.at[new_uid, column] = row[column]
@@ -51,18 +52,16 @@ class CustomDataFrame(pd.DataFrame):
         return new_uid
 
     def delete_row(self, uid: str) -> None:
-        """Delete row from the dataframe by uid."""
-        self.drop(uid, inplace=True)
+        """Delete row from the dataframe by uid column."""
+        self.drop(self[self["uid"] == uid].index, inplace=True)
 
     def combine_rows(self, rows: List[pd.Series]) -> pd.Series:
         """Use to merge rows with different data. First row in list is a reference."""
-        new_row = pd.Series([], index=self.columns)
+        new_row = pd.Series([""] * len(self.columns), index=self.columns)
 
-        for row in rows:
-            intersection_columns = set(row.index) & set(self.columns)
-
-            for column in intersection_columns:
-                if new_row[column].strip() == "":
+        for column in self.COLUMNS:
+            for row in rows:
+                if column in row and new_row[column].strip() == "":
                     new_row[column] = row[column]
 
         return new_row
@@ -83,7 +82,7 @@ class CustomDataFrame(pd.DataFrame):
 
         combined_row = self.combine_rows([row, *duplicates])
 
-        new_uid = self.add_row(combined_row)
+        new_uid = self.add_row(combined_row, combined_row["uid"])
         return {
             "uid": new_uid,
             "duplicates": duplicates,
