@@ -10,18 +10,17 @@ GitHub: [github.com/blogerlu/it_inno_hack](https://github.com/blogerlu/it_inno_h
 ## Структура проекта
 
 ```
+.
 ├── app
 │   ├── custom_dataframe.py
 │   ├── __init__.py
-│   ├── main.py
+│   ├── __pycache__
+│   │   ├── custom_dataframe.cpython-312.pyc
+│   │   ├── __init__.cpython-312.pyc
+│   │   └── similarity_system.cpython-312.pyc
 │   └── similarity_system.py
 ├── data
 │   └── public
-│       ├── docker-compose
-│       │   ├── docker-compose.yaml
-│       │   ├── docker-entrypoint-initdb.d
-│       │   │   └── 00_initial_datasets_tables.sh
-│       │   └── input_data
 │       ├── HOW_TO.md
 │       ├── main1.csv
 │       ├── main2.csv
@@ -34,6 +33,7 @@ GitHub: [github.com/blogerlu/it_inno_hack](https://github.com/blogerlu/it_inno_h
 ├── Dockerfile
 ├── images
 │   └── header.png
+├── main.py
 ├── notebooks
 │   ├── clickhouse_connect.ipynb
 │   ├── data_analitics.ipynb
@@ -60,7 +60,8 @@ docker-compose up
 
 Наследник pd.DataFrame для работы с данными.
 
-* Метод `register_row` проверяет наличие "похожих" записей (дубликатов) через `SimilaritySystem` (о ней читать дальше) и вносит запись, если у неё нет дубликатов или дополняет данные дубликата, если есть дополнительные параметры.
+* Метод `register_row` проверяет наличие "похожих" записей (дубликатов) через `SimilaritySystem` (о ней читать дальше) и
+  вносит запись, если у неё нет дубликатов или дополняет данные дубликата, если есть дополнительные параметры.
 * Метод `combine_rows` сливает в одну запись данные из разных записей, оставляя максимальное количество данных.
 
 ### SimilaritySystem (`similarity_system.py`)
