@@ -13,6 +13,7 @@ GitHub: [github.com/blogerlu/it_inno_hack](https://github.com/blogerlu/it_inno_h
 ├── app
 │   ├── custom_dataframe.py
 │   ├── __init__.py
+│   ├── main.py
 │   └── similarity_system.py
 ├── data
 │   └── public
@@ -29,6 +30,8 @@ GitHub: [github.com/blogerlu/it_inno_hack](https://github.com/blogerlu/it_inno_h
 │   ├── docker-compose.yaml
 │   └── docker-entrypoint-initdb.d
 │       └── 00_initial_datasets_tables.sh
+├── docker-compose.yml
+├── Dockerfile
 ├── images
 │   └── header.png
 ├── notebooks
@@ -38,7 +41,6 @@ GitHub: [github.com/blogerlu/it_inno_hack](https://github.com/blogerlu/it_inno_h
 ├── poetry.lock
 ├── pyproject.toml
 └── README.md
-
 ```
 
 ## Setup

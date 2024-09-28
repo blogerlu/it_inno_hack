@@ -6,7 +6,7 @@ COPY pyproject.toml poetry.lock ./
 RUN poetry config virtualenvs.create false && \
     poetry install
 
-WORKDIR /src
+WORKDIR /app
 #COPY src ./src/
 
 #RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10
