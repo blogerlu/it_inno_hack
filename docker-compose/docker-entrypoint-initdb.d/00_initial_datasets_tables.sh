@@ -1,6 +1,6 @@
 
 #!/bin/bash
-set -e 
+set -e
 clickhouse client -n <<-EOSQL
 create or replace table table_dataset1
 (
@@ -17,7 +17,7 @@ partition by murmurHash3_32(uid) % 8
 order by uid;
 EOSQL
 
-set -e 
+set -e
 clickhouse client -n <<-EOSQL
 create or replace table table_dataset2
 (
@@ -34,7 +34,7 @@ partition by murmurHash3_32(uid) % 8
 order by uid;
 EOSQL
 
-set -e 
+set -e
 clickhouse client -n <<-EOSQL
 create or replace table table_dataset3
 (
@@ -49,7 +49,7 @@ partition by murmurHash3_32(uid) % 8
 order by uid;
 EOSQL
 
-set -e 
+set -e
 clickhouse client -n <<-EOSQL
 create or replace table table_results
 (
