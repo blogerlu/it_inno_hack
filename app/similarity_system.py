@@ -28,9 +28,9 @@ class SimilaritySystem:
         """Compare rows and calculate similarity. Return similarity in range [0, 1]."""
         # TODO: remove test rules and create real rules
 
-        if "email" in row2.index and (row1["email1"] == row2["email"] or row1["email2"] == row2["email"]):
+        if "email" in row2.index and (row1["email"] == row2["email"] or row1["email2"] == row2["email"]):
             return 1
-        if "phone" in row2.index and (row1["phone1"] == row2["phone"] or row1["phone2"] == row2["phone"]):
+        if "phone" in row2.index and (row1["phone"] == row2["phone"] or row1["phone2"] == row2["phone"]):
             return 1
         return 0
 

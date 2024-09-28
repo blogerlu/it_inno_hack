@@ -22,10 +22,10 @@ class CustomDataFrame(pd.DataFrame):
         "last_name",
         "birthdate",
         "sex",
-        "phone1",  # старый и новый телефоны
+        "phone",  # старый и новый телефоны
         "phone2",
         "address",
-        "email1",  # множественный email
+        "email",  # множественный email
         "email2",
         "email3",
     ]
