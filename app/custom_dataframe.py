@@ -3,8 +3,18 @@ from uuid import uuid4
 
 import pandas as pd
 
+from app.similarity_system import SimilaritySystem
+
 
 class CustomDataFrame(pd.DataFrame):
+    """
+    Custom DataFrame class. Use for merging tables into one.
+
+    COLUMNS: List[str] - list of columns in the dataframe
+
+    SIMILARITY_THRESHOLD: float - threshold for similarity
+    """
+
     COLUMNS = [
         "uid",
         "first_name",
@@ -18,26 +28,21 @@ class CustomDataFrame(pd.DataFrame):
         "email1",  # множественный email
         "email2",
         "email3",
+        "from_table",
     ]
 
     SIMILARITY_THRESHOLD = 0.5
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs, columns=self.COLUMNS)
+        self.similarity = SimilaritySystem()
 
     @staticmethod
     def generate_uid() -> str:
         return str(uuid4())
 
-    @staticmethod
-    def get_similarity(row1: pd.Series, row2: pd.Series) -> float:  # TODO: create rules system
-        if row1["email1"] == row2["email"]:
-            return 1
-        if row1["phone1"] == row2["phone"]:
-            return 1
-        return 0
-
     def add_row(self, row: pd.Series) -> str:
+        """Register new row and add maximum data from the row to the dataframe."""
         intersection_columns = set(row.index) & set(self.columns)
         new_uid = self.generate_uid()
 
@@ -47,9 +52,11 @@ class CustomDataFrame(pd.DataFrame):
         return new_uid
 
     def delete_row(self, uid: str) -> None:
+        """Delete row from the dataframe by uid."""
         self.drop(uid, inplace=True)
 
     def combine_rows(self, rows: List[pd.Series]) -> pd.Series:
+        """Use to merge rows with different data. First row in list is a reference."""
         new_row = pd.Series([], index=self.columns)
 
         for row in rows:
@@ -61,7 +68,9 @@ class CustomDataFrame(pd.DataFrame):
 
         return new_row
 
-    def register_row(self, row: pd.Series) -> Dict[str, Any]:
+    def register_row(self, row: pd.Series, from_table: int) -> Dict[str, Any]:
+        """Register row in the dataframe. Return uid and list of duplicates."""
+        row["from_table"] = from_table
         duplicates = self.get_duplicates(row)
 
         if len(duplicates) == 0:
@@ -83,10 +92,11 @@ class CustomDataFrame(pd.DataFrame):
         }
 
     def get_duplicates(self, row: pd.Series) -> List[Tuple[str, float]]:
+        """Get list of duplicates in the dataframe by similarity."""
         duplicates = []
         for index in self.index:
             row0 = self.loc[index]
-            similarity = self.get_similarity(row0, row)
+            similarity = self.similarity(row0, row)
             if similarity > self.SIMILARITY_THRESHOLD:
                 duplicates.append((row0["uid"], similarity))
         return duplicates
