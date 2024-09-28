@@ -28,7 +28,6 @@ class CustomDataFrame(pd.DataFrame):
         "email1",  # множественный email
         "email2",
         "email3",
-        "from_table",
     ]
 
     SIMILARITY_THRESHOLD = 0.5
@@ -68,9 +67,8 @@ class CustomDataFrame(pd.DataFrame):
 
         return new_row
 
-    def register_row(self, row: pd.Series, from_table: int) -> Dict[str, Any]:
+    def register_row(self, row: pd.Series) -> Dict[str, Any]:
         """Register row in the dataframe. Return uid and list of duplicates."""
-        row["from_table"] = from_table
         duplicates = self.get_duplicates(row)
 
         if len(duplicates) == 0:
