@@ -15,6 +15,6 @@ class NameCleaner(BaseCleaner):
         name = name.replace("ОГЛИ", "")
         name = name.replace("УГЛЫ", "")
         name = name.replace("УГЛИ", "")
+        name = name.replace("НЕТ", "")
         name = " ".join(name.split())
-
         return name
