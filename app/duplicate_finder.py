@@ -51,5 +51,4 @@ class DuplicateFinder:
         df_non_empty = df[(df[column] != "") & (df[column].str.len() >= 3)]
         merged = df_non_empty.merge(df_non_empty, on=column, suffixes=("1", "2"))
         merged = merged[merged["uid1"] != merged["uid2"]]
-        merged = merged[merged["uid1"] < merged["uid2"]]
         return merged[["name1", "name2", "uid1", "uid2"]]
