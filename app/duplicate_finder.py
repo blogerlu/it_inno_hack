@@ -28,3 +28,28 @@ class DuplicateFinder:
         duplicate_pairs["uid1"] = duplicate_pairs["index1"].mapply(lambda x: df.loc[x, "name"])
         duplicate_pairs["uid2"] = duplicate_pairs["index2"].mapply(lambda x: df.loc[x, "name"])
         return duplicate_pairs[["uid1", "uid2"]]
+
+    def fast_call(self, df: pd.DataFrame) -> pd.DataFrame:
+        df["phone"] = df["phone"].fillna("")
+        df["email"] = df["email"].fillna("")
+
+        # Разбиваем имя на составляющие (ФИО или ФИ)
+        df["name_split"] = df["name"].str.split()
+        df["first_last"] = df["name_split"].apply(lambda x: " ".join(x[:2]) if len(x) >= 2 else x[0])
+
+        phone_pairs = self.find_pairs_by_column(df, "phone")
+        email_pairs = self.find_pairs_by_column(df, "email")
+        name_pairs = self.find_pairs_by_column(df, "first_last")
+
+        all_pairs = pd.concat([phone_pairs, email_pairs, name_pairs]).drop_duplicates().reset_index(drop=True)
+
+        return all_pairs
+
+    @staticmethod
+    def find_pairs_by_column(df: pd.DataFrame, column: str) -> pd.DataFrame:
+        """Находит пары дубликатов по указанному столбцу с использованием merge для поиска совпадений"""
+        df_non_empty = df[df[column] != ""]
+        merged = df_non_empty.merge(df_non_empty, on=column, suffixes=("1", "2"))
+        merged = merged[merged["uid1"] != merged["uid2"]]
+        merged = merged[merged["uid1"] < merged["uid2"]]
+        return merged[["name1", "name2", "uid1", "uid2"]]

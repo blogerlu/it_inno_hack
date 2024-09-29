@@ -37,5 +37,10 @@ class Processor:
         self.df["birthdate"] = self.df["birthdate"].apply(self.cleaners["birthdate"].clean)
         return self.df
 
-    def find_duplicates(self) -> pd.DataFrame:
-        return self.duplicate_finder(self.df)
+    def find_duplicates(self, mode: str = "normal") -> pd.DataFrame:
+        if mode == "normal":
+            return self.duplicate_finder(self.df)
+        elif mode == "fast":
+            return self.duplicate_finder.fast_call(self.df)
+        else:
+            raise ValueError(f"Unknown mode: {mode}. Supported modes: 'normal', 'fast'")
