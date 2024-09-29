@@ -5,26 +5,38 @@
 ## Ссылки
 
 Сайт соревнования: [it-innohack.ru](https://it-innohack.ru/) \
-GitHub: [github.com/blogerlu/it_inno_hack](https://github.com/blogerlu/it_inno_hack)
+GitHub: [github.com/blogerlu/it_inno_hack](https://github.com/blogerlu/it_inno_hack) \
+Презентация: [google-slides](https://docs.google.com/presentation/d/1Yr8kffI3Ekf8GrSjdYI6fKgN-JYQnfYXKVZQmuAoad4/edit?usp=sharing)
 
 ## Структура проекта
 
 ```
 .
 ├── app
-│   ├── custom_dataframe.py
 │   ├── __init__.py
-│   ├── __pycache__
-│   │   ├── custom_dataframe.cpython-312.pyc
-│   │   ├── __init__.cpython-312.pyc
-│   │   └── similarity_system.cpython-312.pyc
-│   └── similarity_system.py
+│   ├── cleaners
+│   │   ├── __init__.py
+│   │   ├── base_cleaner.py
+│   │   ├── birthdate_cleaner.py
+│   │   ├── email_cleaner.py
+│   │   ├── name_cleaner.py
+│   │   ├── phone_cleaner.py
+│   ├── duplicate_finder.py
+│   ├── ml
+│   │   ├── __init__.py
+│   │   ├── clustering.py
+│   │   └── word2vec.py
+│   ├── processor.py
 ├── data
-│   └── public
-│       ├── HOW_TO.md
-│       ├── main1.csv
-│       ├── main2.csv
-│       └── main3.csv
+│   ├── concat.csv
+│   ├── duplicates.csv
+│   ├── main1_clean.csv
+│   ├── main3_clean.csv
+│   ├── public
+│   │   ├── HOW_TO.md
+│   │   ├── main1.csv
+│   │   ├── main2.csv
+│   │   └── main3.csv
 ├── docker-compose
 │   ├── docker-compose.yaml
 │   └── docker-entrypoint-initdb.d
@@ -56,21 +68,41 @@ docker-compose up
 На данном этапе мы проводим много локальных тестов в jupyter notebook'ах, однако уже сделали часть централизированной
 системы регистрации записей в `app`.
 
-### CustomDataFrame (`custom_dataframe.py`)
+### Cleaners
 
-Наследник pd.DataFrame для работы с данными.
+Классы с базовыми правилами: регулярными выражениями и другой работой со строками.
 
-* Метод `register_row` проверяет наличие "похожих" записей (дубликатов) через `SimilaritySystem` (о ней читать дальше) и
-  вносит запись, если у неё нет дубликатов или дополняет данные дубликата, если есть дополнительные параметры.
-* Метод `combine_rows` сливает в одну запись данные из разных записей, оставляя максимальное количество данных.
+* `app/cleaners/base_cleaner.py` - базовый класс для стандартизации данных
+* `app/cleaners/birthdate_cleaner.py` - стандартизация даты рождения
+* `app/cleaners/email_cleaner.py` - стандартизация почты
+* `app/cleaners/name_cleaner.py` - стандартизация имени
+* `app/cleaners/phone_cleaner.py` - стандартизация телефона
 
-### SimilaritySystem (`similarity_system.py`)
+### Duplicate Finder
 
-Класс для работы с сравнением строк.
+Класс для поиска дубликатов.
+У него есть 2 режима:
 
-* Метод `__call__` подсчитывает похожесть двух строк с помощью заранее записанных правил (`Rule`).
-* Метод `add_rule` добавляет правило для сравнения строк.
+* normal - наилучшее качество за счёт подсчёта расстояний `Jaro–Winkler` и `Damerau–Levenshtein`, кластеризации векторов
+  имён.
+* fast - хуже качество, но быстрее за счёт отказа от расстояний в пользу обычного совпадения и отказа от `Word2Vec` при
+  блокировании.
 
-### Rule (`similarity_system.py`)
+Внутри класса создаются блоки для более эффективного обращения и сравнения в режиме `normal`.
 
-Абстрактный класс для создания правил сравнения строк.
+### Processor
+
+Класс для общения с Duplicate Finder и Cleaner'ами.
+Создан для поддержания необходимых форматов данных и стандартизованной передачи (например, где нет столбцов - заполняем
+пустыми и тп).
+
+### ML (Word2Vec and MiniBatchKMeans)
+
+Данный функционал не вошёл в финальную версию Processor, тк имел низкие показатели скорости.
+
+Однако мы считаем, что в реальной практике необходимость обработать БД с более чем несколькоми миллионами записей на малых ресурсах возникает крайне
+редко и время может стать менее приоритетным параметром.
+
+Поэтому считаем этот метод важным и перспективным для развития. Для нас важно было протестировать гипотезу, что он повысит качество блокирования и поиска по БД - она оправдалась.
+
+`Word2Vec` здесь переводит имена в вектора, а `MiniBatchKMeans` - кластеризует эти векторы. Тем самым, при добавлении новой записи мы сможем точно определить группу для сравнения, тем самым __снизим__ общее время использования.
