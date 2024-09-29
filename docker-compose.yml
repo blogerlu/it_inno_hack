@@ -11,20 +11,20 @@ services:
     volumes:
       - ./data/public:/csv_files
       - ./docker-compose/docker-entrypoint-initdb.d/00_initial_datasets_tables.sh:/docker-entrypoint-initdb.d/00_initial_datasets_tables.sh
-    entrypoint: /bin/sh -c "chmod +x /docker-entrypoint-initdb.d/00_initial_datasets_tables.sh && /entrypoint.sh"
-
-  solution:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: solution
-    volumes:
-      - ./app:/app/app/
-      - ./main.py:/app/main.py
-    depends_on:
-      - clickhouse
-    #    stdin_open: true
-    #    tty: true
-
-    command: /bin/sh -c "sleep 42 && python3 -u /app/main.py"
+#    entrypoint: /bin/sh -c "chmod +x /docker-entrypoint-initdb.d/00_initial_datasets_tables.sh && /entrypoint.sh"
+#
+#  solution:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    container_name: solution
+#    volumes:
+#      - ./app:/app/app/
+#      - ./main.py:/app/main.py
+#    depends_on:
+#      - clickhouse
+#    #    stdin_open: true
+#    #    tty: true
+#
+#    command: /bin/sh -c "sleep 42 && python3 -u /app/main.py"
 #    command: [ 'python3', '-u', 'app/main.py' ]

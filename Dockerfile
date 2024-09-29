@@ -7,8 +7,9 @@ RUN poetry config virtualenvs.create false && \
     poetry install
 
 WORKDIR /app
-#COPY src ./src/
+COPY app ./app/app
+COPY main.py ./app/main.py
 
 #RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10
 
-#CMD ["python3", "-u", "src/main.py"]
+CMD ["python3", "-u", "app/main.py"]
