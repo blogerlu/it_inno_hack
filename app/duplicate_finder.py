@@ -37,9 +37,9 @@ class DuplicateFinder:
         df["name_split"] = df["name"].str.split()
         df["first_last"] = df["name_split"].apply(lambda x: " ".join(x[:2]) if len(x) >= 2 else x[0])
 
-        phone_pairs = self.find_pairs_by_column(df, "phone")
-        email_pairs = self.find_pairs_by_column(df, "email")
-        name_pairs = self.find_pairs_by_column(df, "first_last")
+        phone_pairs = self.find_pairs_by_column(df[["phone", "uid", "name"]], "phone")
+        name_pairs = self.find_pairs_by_column(df[["first_last", "uid", "name"]], "first_last")
+        email_pairs = self.find_pairs_by_column(df[["email", "uid", "name"]], "email")
 
         all_pairs = pd.concat([phone_pairs, email_pairs, name_pairs]).drop_duplicates().reset_index(drop=True)
 
@@ -49,6 +49,9 @@ class DuplicateFinder:
     def find_pairs_by_column(df: pd.DataFrame, column: str) -> pd.DataFrame:
         """Находит пары дубликатов по указанному столбцу с использованием merge для поиска совпадений"""
         df_non_empty = df[(df[column] != "") & (df[column].str.len() >= 3)]
-        merged = df_non_empty.merge(df_non_empty, on=column, suffixes=("1", "2"))
+        # df_non_empty.to_csv('df.csv', index=False)
+        # df_non_empty = df_non_empty[:10000]
+        merged = df_non_empty.merge(df_non_empty, on=column, suffixes=("1", "2"), how="left")
         merged = merged[merged["uid1"] != merged["uid2"]]
+        # merged = merged[merged["uid1"] < merged["uid2"]]
         return merged[["name1", "name2", "uid1", "uid2"]]
