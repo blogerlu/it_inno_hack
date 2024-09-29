@@ -10,7 +10,7 @@ def main():
     total_time = 0
     total_duplicates_count = 0
 
-    batch_size = 1000000
+    batch_size = 100000
     batch_count = 1
     mode = "fast"
 

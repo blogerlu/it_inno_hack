@@ -8,4 +8,6 @@ class PhoneCleaner(BaseCleaner):
         phone = str(phone)
         phone = phone.replace("+7", "8")
         phone = re.sub(r"\D", "", phone)  # Убираем все кроме цифр
+        if len(phone) < 10:
+            return ""
         return phone

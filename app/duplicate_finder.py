@@ -48,7 +48,7 @@ class DuplicateFinder:
     @staticmethod
     def find_pairs_by_column(df: pd.DataFrame, column: str) -> pd.DataFrame:
         """Находит пары дубликатов по указанному столбцу с использованием merge для поиска совпадений"""
-        df_non_empty = df[df[column] != ""]
+        df_non_empty = df[(df[column] != "") & (df[column].str.len() >= 3)]
         merged = df_non_empty.merge(df_non_empty, on=column, suffixes=("1", "2"))
         merged = merged[merged["uid1"] != merged["uid2"]]
         merged = merged[merged["uid1"] < merged["uid2"]]
