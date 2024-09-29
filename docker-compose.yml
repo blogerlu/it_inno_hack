@@ -19,12 +19,12 @@ services:
       dockerfile: Dockerfile
     container_name: solution
     volumes:
-      - ./app:/app
+      - ./app:/app/app/
       - ./main.py:/app/main.py
     depends_on:
       - clickhouse
     #    stdin_open: true
     #    tty: true
 
-    #    command: /bin/sh -c "sleep 42 && python3 -u /src/main.py"
-    command: [ 'python3', '-u', 'app/main.py' ]
+    command: /bin/sh -c "sleep 42 && python3 -u /app/main.py"
+#    command: [ 'python3', '-u', 'app/main.py' ]

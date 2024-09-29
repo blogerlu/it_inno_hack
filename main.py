@@ -9,7 +9,26 @@ from app import Processor
 
 mode = "fast"
 
-client = Client(host="localhost", port=9000, user="default", password="", database="default")
+
+def check_table_exists(client, table_name):
+    query = f"EXISTS TABLE {table_name}"
+    try:
+        return client.execute(query)[0][0]  # Возвращает True или False
+    except:
+        print(f"Error checking table")
+        return False
+
+table_name = 'table_dataset1'
+client = Client(host='clickhouse', port=9000, user='default', password='', database='default')
+
+# Проверяем доступность таблицы с интервалом в 5 секунд
+while True:
+    if check_table_exists(client, table_name):
+        print(f"Таблица {table_name} доступна.")
+        break
+    else:
+        print(f"Таблица {table_name} недоступна, пробую снова через 5 секунд...")
+        time.sleep(5)
 
 columns_1 = [column[0] for column in client.execute("DESCRIBE TABLE table_dataset1")]
 columns_2 = [column[0] for column in client.execute("DESCRIBE TABLE table_dataset2")]
