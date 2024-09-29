@@ -3982,6 +3982,20 @@ docs = ["myst-parser", "pydata-sphinx-theme", "sphinx"]
 test = ["argcomplete (>=3.0.3)", "mypy (>=1.7.0)", "pre-commit", "pytest (>=7.0,<8.2)", "pytest-mock", "pytest-mypy-testing"]
 
 [[package]]
+name = "transliterate"
+version = "1.10.2"
+description = "Bi-directional transliterator for Python"
+optional = false
+python-versions = "*"
+files = [
+    {file = "transliterate-1.10.2-py2.py3-none-any.whl", hash = "sha256:010a5021bf6021689c4fade0985f3f7b3db1f2f16a48a09a56797f171c08ed42"},
+    {file = "transliterate-1.10.2.tar.gz", hash = "sha256:bc608e0d48e687db9c2b1d7ea7c381afe0d1849cad216087d8e03d8d06a57c85"},
+]
+
+[package.dependencies]
+six = ">=1.1.0"
+
+[[package]]
 name = "types-python-dateutil"
 version = "2.9.0.20240906"
 description = "Typing stubs for python-dateutil"
@@ -4244,4 +4258,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "5916b66d3367105e7e7fb14d05b9dc56abf260652aa4683e0b9511eb3dce7d09"
+content-hash = "bb91cc109259382371e3c37f3d6e5ccb307bf72e6aa9dc45fffe2c685d6d65fe"
